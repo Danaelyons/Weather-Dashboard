@@ -94,17 +94,17 @@ cardBod.setAttribute('class', 'card-body');
 card.append(cardBod);
 
 heading.setAttribute('class', 'h3 card-title');
-tempEl.setAttribute('class', 'card-text');
-windEl.setAttribute('class', 'card-text');
-humidityEl.setAttribute('class', 'card-text');
+elementTemp.setAttribute('class', 'card-text');
+elementOfWind .setAttribute('class', 'card-text');
+elementOfHumidity.setAttribute('class', 'card-text');
 
 heading.textContent = `${city} (${date})`;
-weatherIcon.setAttribute('src', urlImage);
-weatherIcon.setAttribute('class', 'weather-img');
-heading.append(weatherImage);
-tempEl.textContent = `Temperature: ${temperatureFaren}°F`;
-windEl.textContent = `Wind: ${windMileage} MPH`;
-humidityEl.textContent = `Humidity: ${humidityLevels} %`;
+weatherImage.setAttribute('src', urlImage);
+weatherImage.setAttribute('class', 'weather-img');
+heading.append(weatherImage)
+elementTemp.textContent = `Temperature: ${temperatureFaren}°F`;
+elementOfWind .textContent = `Wind: ${windMileage} MPH`;
+elementOfHumidity.textContent = `Humidity: ${humidityLevels} %`;
 cardBod.append(heading, elementTemp, elementOfWind, elementOfHumidity);
 
 todayContainer.innerHTML = '';
@@ -117,4 +117,28 @@ temperatureFaren = forecast.main.temp;
 humidityLevels = forecast.main.humidity;
 windMileage = forecast.wind.speed;
 }
+
+  // Creating card elements.
+  // col 
+  column = document.createElement('div');
+  card = document.createElement('div');
+  cardBod = document.createElement('div');
+  // cardTitle
+  cardName = document.createElement('h5');
+  weatherImage = document.createElement('img');
+  elementTemp = document.createElement('p');
+  elementOfWind  = document.createElement('p');
+  elementOfHumidity = document.createElement('p');
+
+  column.append(card);
+  card.append(cardBod);
+  cardBod.append(cardName, weatherImage, elementTemp, elementOfWind , elementOfHumidity);
+  column.setAttribute('class', 'col-md');
+  column.classList.add('five-day-card');
+  card.setAttribute('class', 'card bg-primary h-100 text-white');
+  cardBod.setAttribute('class', 'card-body p-2');
+  cardName.setAttribute('class', 'card-title');
+  elementTemp.setAttribute('class', 'card-text');
+  elementOfWind.setAttribute('class', 'card-text');
+  elementOfHumidity.setAttribute('class', 'card-text');
 
