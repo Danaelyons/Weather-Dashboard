@@ -110,10 +110,9 @@ cardBod.append(heading, elementTemp, elementOfWind, elementOfHumidity);
 todayContainer.innerHTML = '';
 todayContainer.append(card);
 
-// Function to display a forecast card given an object from open weather api
-// daily forecast.
+// displays forecast
 function renderForecastCard(forecast) {
-// variables for data from api
+// data from api
 temperatureFaren = forecast.main.temp;
 humidityLevels = forecast.main.humidity;
 windMileage = forecast.wind.speed;
