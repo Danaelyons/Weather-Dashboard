@@ -44,21 +44,78 @@ function attachHistory(search) {
   }
   userSearchHistory.push(search);
 
-  localStorage.setItem('search-history', JSON.stringify(searchHistory));
+  localStorage.setItem('search-history', JSON.stringify(userSearchHistory));
   creatingSearchHistory();
 }
 
 // Function to get search history from local storage
 //initSearchHistory
 function initSearchHistory() {
-  var storedHistory = localStorage.getItem('search-history');
+   storedHistory = localStorage.getItem('search-history');
   if (storedHistory) {
     userSearchHistory = JSON.parse(storedHistory);
   }
   creatingSearchHistory();
 }
 
-// Function to display the current weather data fetched from OpenWeather api.
+// displays current data of weather from API.
 function renderCurrentWeather(city, weather) {
-  var date = dayjs().format('M/D/YYYY');
- 
+  date = dayjs().format('M/D/YYYY');
+}
+
+//-----------------
+// Store response data from our fetch request in variables
+//tempF
+temperatureFaren = weather.main.temp;
+// windMph
+windMileage = weather.wind.speed;
+// humiidity 
+humidityLevels = weather.main.humidity;
+// iconUrl **help**
+urlImage = 
+
+// humidityEl
+elementOfHumidity = document.createElement('p');
+// card
+card = document.createElement('div');
+// heading
+heading = document.createElement('h2');
+// weatherIcon
+weatherImage = document.createElement('img');
+// windEl
+elementOfWind = document.createElement('p');
+// cardBody
+cardBod = document.createElement('div');
+//tempEl
+elementTemp = document.createElement('p');
+
+card.setAttribute('class', 'card');
+cardBod.setAttribute('class', 'card-body');
+card.append(cardBod);
+
+heading.setAttribute('class', 'h3 card-title');
+tempEl.setAttribute('class', 'card-text');
+windEl.setAttribute('class', 'card-text');
+humidityEl.setAttribute('class', 'card-text');
+
+heading.textContent = `${city} (${date})`;
+weatherIcon.setAttribute('src', urlImage);
+weatherIcon.setAttribute('class', 'weather-img');
+heading.append(weatherImage);
+tempEl.textContent = `Temperature: ${temperatureFaren}°F`;
+windEl.textContent = `Wind: ${windMileage} MPH`;
+humidityEl.textContent = `Humidity: ${humidityLevels} %`;
+cardBod.append(heading, elementTemp, elementOfWind, elementOfHumidity);
+
+todayContainer.innerHTML = '';
+todayContainer.append(card);
+
+// Function to display a forecast card given an object from open weather api
+// daily forecast.
+function renderForecastCard(forecast) {
+// variables for data from api
+temperatureFaren = forecast.main.temp;
+humidityLevels = forecast.main.humidity;
+windMileage = forecast.wind.speed;
+}
+
