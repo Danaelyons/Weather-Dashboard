@@ -1,13 +1,13 @@
 userSearchHistory = [];
 weatherApiKeyLink = 'https://api.openweathermap.org';
-weatherApiKey = '51ae5fde64c802c8bfda33f227ebd26d';
+weatherApi = '51ae5fde64c802c8bfda33f227ebd26d';
 
 //search form
-searchOutlet = document.querySelector('#search-form');
+searchOutlet = document.querySelector('#user-search-form');
 //search Input
-userSearchPlacement = document.querySelector('#search-input');
+userSearchPlacement = document.querySelector('#user-search-input');
 //today Container
-currentDayContainer = document.querySelector('#today');
+currentDayContainer = document.querySelector('#this-is-today');
 //forecase Container
 weatherContainer = document.querySelector('#forecast');
 //search History Container
@@ -19,7 +19,7 @@ dayjs.extend(window.dayjs_plugin_timezone);
 
 // Shows user's serach history results.
 //render Search History
-function creatingSearchHistory() {
+function creatingUserSearchHistory() {
           historyOfUserSearchContainer.innerHTML = '';
 
   // Shows most recent search at the top of search history.
@@ -45,7 +45,7 @@ function attachHistory(search) {
   userSearchHistory.push(search);
 
   localStorage.setItem('search-history', JSON.stringify(userSearchHistory));
-  creatingSearchHistory();
+  creatingUserSearchHistory();
 }
 
 // Function to get search history from local storage
@@ -55,7 +55,7 @@ function initSearchHistory() {
   if (storedHistory) {
     userSearchHistory = JSON.parse(storedHistory);
   }
-  creatingSearchHistory();
+  creatingUserSearchHistory();
 }
 
 // displays current data of weather from API.
@@ -142,3 +142,127 @@ windMileage = forecast.wind.speed;
   elementOfWind.setAttribute('class', 'card-text');
   elementOfHumidity.setAttribute('class', 'card-text');
 
+
+  // content into elements
+  cardName.textContent = dayjs(forecast.dt_txt).format('M/D/YYYY');
+  weatherImage.setAttribute('src', iconUrl);
+  weatherImage.setAttribute('alt', iconDescription);
+  tempEl.textContent = `Temp: ${tempF} °F`;
+  windEl.textContent = `Wind: ${windMph} MPH`;
+  elementOfHumidity.textContent = `Humidity: ${humidity} %`;
+
+  forecastContainer.append(column);
+
+
+// 5 day forecast
+function renderForecast(dayForecast) {
+  startDat = dayjs().add(1, 'day').startOf('day').unix();
+  endDat = dayjs().add(6, 'day').startOf('day').unix();
+//heading Col
+  headingColumn = document.createElement('div');
+  // heading
+  heading = document.createElement('h4');
+
+  headingColumn.setAttribute('class', 'col-12');
+  heading.textContent = '5-Day Forecast:';
+  headingColumn.append(heading);
+
+  forecastContainer.innerHTML = '';
+  forecastContainer.append(headingColumn);
+
+  for (var i = 0; i < dayForecast.length; i++) {
+
+    // First filters through all of the data and returns only data that falls between one day after the current data and up to 5 days later.
+    if (dayForecast[i].dt >= startDat && dayForecast[i].dt < endDat) {
+
+      // Then filters through the data and returns only data captured at noon for each day.
+      if (dayForecast[i].dt_txt.slice(11, 13) == "12") {
+        renderForecastCard(dayForecast[i]);
+      }
+    }
+  }
+}
+
+function renderItems(city, data) {
+  renderCurrentWeather(city, data.list[0], data.city.timezone);
+  renderForecast(data.list);
+}
+//gets user data of city they are looking up and displays search.
+function fetchWeather(location) {
+  { latitude } location;
+  { longitude } location;
+  city = location.name;
+
+  apiUrl = `${weatherApiKeyLink}/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${weatherApi}`;
+
+  fetch(apiUrl)
+    .then(function (res) {
+      return res.json();
+
+    })
+    .then(function (data) {
+      renderItems(city, data);
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
+}
+
+function fetchCoords(search) {
+  var apiUrl = `${weatherApiRootUrl}/geo/1.0/direct?q=${search}&limit=5&appid=${weatherApiKey}`;
+
+  fetch(apiUrl)
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      if (!data[0]) {
+        alert('Location not found');
+      } else {
+        appendToHistory(search);
+        fetchWeather(data[0]);
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
+}
+
+function handleSearchFormSubmit(e) {
+  // stops continuing search cycle.
+  if (!searchInput.value) {
+    return;
+  }
+
+  e.preventDefault();
+  var search = searchInput.value.trim();
+  fetchCoords(search);
+  searchInput.value = '';
+}
+
+function handleSearchHistoryClick(e) {
+
+  if (!e.target.matches('.btn-history')) {
+
+    return;
+  }
+
+  btn = e.target;
+  search = btn.getAttribute('data-search');
+  fetchCoords(search);
+}
+
+initSearchHistory();
+searchForm.addEventListener('submit', handleSearchFormSubmit);
+searchHistoryContainer.addEventListener('click', handleSearchHistoryClick);
+
+return;
+
+
+btn = e.target;
+search = btn.getAttribute('data-search');
+fetchCoords(search);
+
+initSearchHistory();
+searchForm.addEventListener('submit', handleSearchFormSubmit);
+searchHistoryContainer.addEventListener('click', handleSearchHistoryClick);
