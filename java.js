@@ -1,6 +1,6 @@
-userSearchHistory = [];
-weatherApiKeyLink = 'https://api.openweathermap.org';
-weatherApi = '51ae5fde64c802c8bfda33f227ebd26d';
+const userSearchHistory = [];
+const weatherApiKeyLink = 'https://api.openweathermap.org';
+const eatherApi = '51ae5fde64c802c8bfda33f227ebd26d';
 
 //search form
 searchOutlet = document.querySelector('#user-search-form');
